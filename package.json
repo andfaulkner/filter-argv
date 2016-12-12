@@ -1,0 +1,30 @@
+{
+  "name": "process-argv-minus-flags",
+  "version": "1.0.0",
+  "description": "Return process.argv with any flag arguments passed via the CLI excluded",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andfaulkner/process-argv-minus-flags.git"
+  },
+  "keywords": [
+    "process",
+    "arguments",
+    "cli",
+    "terminal",
+    "utility",
+    "utilities",
+    "command",
+    "line",
+    "command-line"
+  ],
+  "author": "Andrew Faulkner <andfaulkner@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andfaulkner/process-argv-minus-flags/issues"
+  },
+  "homepage": "https://github.com/andfaulkner/process-argv-minus-flags#readme"
+}
