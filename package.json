@@ -1,6 +1,6 @@
 {
   "name": "filter-argv",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Mid-level process.argv filtering utils that make CLI arg extraction a breeze.",
   "main": "index.js",
   "scripts": {
