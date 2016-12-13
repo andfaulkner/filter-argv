@@ -18,6 +18,7 @@ Also, any arguments containing an = that is both followed and preceded by one or
     console.log(contentArgsOnly);
 
 Output values in example, based on how script was run from the terminal:
+
     //    input:  node my-script.js --verbose
     //          --> output --> ["node", "my-script.js"]
     //    input:  node my-script.js
