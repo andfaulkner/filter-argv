@@ -17,19 +17,23 @@ Also, any arguments containing an = that is both followed and preceded by one or
     const contentArgsOnly = processArgvMinusFlags();
     console.log(contentArgsOnly);
 
-Output values in example, based on how script was run from the terminal:
+The output of the above example will vary based on how the script was run (from the terminal). e.g.:
 
-    //    input:  node my-script.js --verbose
-    //          --> output --> ["node", "my-script.js"]
-    //    input:  node my-script.js
-    //          --> output --> ["node", "my-script.js"]
-    //    input:  my-script.js --verbose create-component SidebarGrid
-    //          --> output --> ["my-script.js", "create-component", "SidebarGrid"]
-    //    input:  my-script.js --verbose create-component SidebarGrid --debug
-    //          --> output --> ["my-script.js", "create-component", "SidebarGrid"]
-    //    input:  my-script.js --verbose create-component --name=SidebarGrid --debug
-    //          --> output --> ["my-script.js", "create-component", "--name=SidebarGrid"]
-    //          - the module doesn't exclude arguments containing an = sign
+    input:   node my-script.js --verbose
+    output:  ["node", "my-script.js"]
+
+    input:   node my-script.js
+    output:  ["node", "my-script.js"]
+
+    input:   my-script.js --verbose create-component SidebarGrid
+    output:  ["my-script.js", "create-component", "SidebarGrid"]
+ 
+    input:   my-script.js --verbose create-component SidebarGrid --debug
+    output:  ["my-script.js", "create-component", "SidebarGrid"]
+
+    input:   my-script.js --verbose create-component --name=SidebarGrid --debug
+    output:  ["my-script.js", "create-component", "--name=SidebarGrid"]
+              - recall that args containing an = sign preceded & followed by at least 1 non-dash char aren't excluded
 
 
 Other methods of calling processArgvMinusFlags function:
