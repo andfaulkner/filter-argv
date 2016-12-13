@@ -10,6 +10,7 @@ Also, any arguments containing an = that is both followed and preceded by one or
 *   returns a duplicate of the array with all flag arguments removed.
 *   Examples:
 
+
     //my-script.js
     const processArgvMinusFlags = require('process-argv-minus-flags');
 
