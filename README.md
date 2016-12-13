@@ -3,39 +3,39 @@ Utilities for filtering raw process.argv content (i.e. arguments passed via the 
 
 ##Quick examples
 
-        input:
-            npm run my-script -- create-component HelloWorld --verbose --debug name=meeka --type=puppy
+    input:
+        npm run my-script -- create-component HelloWorld --verbose --debug name=meeka --type=puppy
 
-        in my-script:
+    in my-script:
 
-            const { filterArgv } = require('filter-argv');
+        const { filterArgv } = require('filter-argv');
 
-            filterArgv();
-                // => ['my-script', 'create-component', 'HelloWorld', 'name=meeka', '--type=puppy']
+        filterArgv();
+            // => ['my-script', 'create-component', 'HelloWorld', 'name=meeka', '--type=puppy']
 
-            filterArgv(process.argv);
-                // => ['my-script', 'create-component', 'HelloWorld', 'name=meeka', '--type=puppy']
+        filterArgv(process.argv);
+            // => ['my-script', 'create-component', 'HelloWorld', 'name=meeka', '--type=puppy']
 
-            filterArgv({ keepLonelyDashes: true });
-                // => ['my-script', '--', 'create-component', 'HelloWorld', 'name=meeka', '--type=puppy']
+        filterArgv({ keepLonelyDashes: true });
+            // => ['my-script', '--', 'create-component', 'HelloWorld', 'name=meeka', '--type=puppy']
 
-            filterArgv({ keepLonelyDashes: true, assignments: 'none' });
-                // => ['my-script', '--', 'create-component', 'HelloWorld']
+        filterArgv({ keepLonelyDashes: true, assignments: 'none' });
+            // => ['my-script', '--', 'create-component', 'HelloWorld']
 
-            filterArgv({ assignments: 'noflag' });
-                // => ['my-script', 'create-component', 'HelloWorld', 'name=meeka']
+        filterArgv({ assignments: 'noflag' });
+            // => ['my-script', 'create-component', 'HelloWorld', 'name=meeka']
 
-            filterArgv({ standardArgs: false, assignments: 'all' });
-                // => ['name=meeka', '--type=puppy']
+        filterArgv({ standardArgs: false, assignments: 'all' });
+            // => ['name=meeka', '--type=puppy']
 
-            filterArgv({ flags: true, standardArgs: false });
-                // => ['--verbose', '--debug', 'name=meeka', '--type=puppy']
+        filterArgv({ flags: true, standardArgs: false });
+            // => ['--verbose', '--debug', 'name=meeka', '--type=puppy']
 
-            filterArgv({ flags: true, standardArgs: false, assignments: 'noflag' });
-                // => ['--verbose', '--debug', 'name=meeka']
+        filterArgv({ flags: true, standardArgs: false, assignments: 'noflag' });
+            // => ['--verbose', '--debug', 'name=meeka']
 
-            filterArgv({ flags: true, standardArgs: false, assignments: 'noflag', keepLonelyDashes: true });
-                // => ['--', --verbose', '--debug', 'name=meeka']
+        filterArgv({ flags: true, standardArgs: false, assignments: 'noflag', keepLonelyDashes: true });
+            // => ['--', --verbose', '--debug', 'name=meeka']
 
 
 ##Type signatures
