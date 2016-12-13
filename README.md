@@ -36,6 +36,7 @@ The output of the above example will vary based on how the script was run (from 
     output:  ["my-script.js", "create-component", "--name=SidebarGrid"]
     
 
+
 Other methods of calling processArgvMinusFlags function:
 
     const contentArgsOnly = processArgvMinusFlags(process.argv); // mainly for explicitness
