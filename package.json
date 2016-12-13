@@ -4,7 +4,7 @@
   "description": "Return process.argv with any flag arguments passed via the CLI excluded",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "./node_modules/mocha/bin/mocha test/index.js"
   },
   "repository": {
     "type": "git",
@@ -26,5 +26,12 @@
   "bugs": {
     "url": "https://github.com/andfaulkner/process-argv-minus-flags/issues"
   },
-  "homepage": "https://github.com/andfaulkner/process-argv-minus-flags#readme"
+  "homepage": "https://github.com/andfaulkner/process-argv-minus-flags#readme",
+  "dependencies": {
+    "lodash.reject": "^4.6.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  }
 }
