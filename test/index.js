@@ -9,13 +9,13 @@ const mocha = require('mocha');
 const partial = require('lodash.partial');
 
 /*************************************** TESTED FILE IMPORT ***************************************/
-const { filteredArgv, startDashesThenNonDashes, validateOpts,
+const { filterArgv, startDashesThenNonDashes, validateOpts,
         startsWithDash, isAssignmentFlagArg, isStandaloneDashes } = require('../index');
 
 /********************************************* TESTS **********************************************/
 describe('index.js', function() {
     it('index.js exists', function() {
-      expect(filteredArgv).to.exist;
+      expect(filterArgv).to.exist;
     });
 
     describe('validateOpts', function() {
@@ -93,57 +93,63 @@ describe('index.js', function() {
         })
     });
 
-    describe('filteredArgv', function() {
-        it('exists', function () { expect(filteredArgv).to.exist });
+    describe('filterArgv', function() {
+        it('exists', function () { expect(filterArgv).to.exist });
 
         it('does not exclude items not prefixed with - or -- from arrays given', function() {
-            expect(filteredArgv(['asdf'])).to.eql(['asdf']);
+            expect(filterArgv(['asdf'])).to.eql(['asdf']);
         });
 
         it('excludes items prefixed with - or -- from arrays', function() {
             const testArray1 = ['asdf', '--ok', '-v', 'ntyo'];
-            expect(filteredArgv(testArray1)).to.eql(['asdf', 'ntyo']);
+            expect(filterArgv(testArray1)).to.eql(['asdf', 'ntyo']);
         });
 
         it('defaults to using process.argv as arrayList if no argument given', function () {
             process.argv = ['argOne', 'argTwo', 'argThree'];
-            expect(filteredArgv()).to.eql(process.argv);
+            expect(filterArgv()).to.eql(process.argv);
 
             process.argv = ['argOne', 'argTwo', '--flag', 'argThree'];
-            expect(filteredArgv()).to.eql(['argOne', 'argTwo', 'argThree']);
+            expect(filterArgv()).to.eql(['argOne', 'argTwo', 'argThree']);
    
             process.argv = Object.assign({}, oldProcArgs); // restore args
         });
 
         it('keeps args w/ an = preceded & followed by at least 1 non-dash char', function () {
             process.argv = ['argOne', 'argTwo', 'argThree', '--name=my-component'];
-            expect(filteredArgv()).to.eql(process.argv);
+            expect(filterArgv()).to.eql(process.argv);
             process.argv = Object.assign({}, oldProcArgs); // restore args
         });
 
         it('by default excludes standalone -- or -', function () {
             process.argv = ['--', '-'];
-            expect(filteredArgv()).to.eql([]);
+            expect(filterArgv()).to.eql([]);
             process.argv = Object.assign({}, oldProcArgs); // restore args
         });
 
         it('if requested, can keep standalone -- or -', function () {
             process.argv = ['--', '-'];
-            expect(filteredArgv({ keepLonelyDashes: true })).to.eql(['--', '-']);
-            expect(filteredArgv({ keepLonelyDashes: false })).to.be.empty;
+            expect(filterArgv({ keepLonelyDashes: true })).to.eql(['--', '-']);
+            expect(filterArgv({ keepLonelyDashes: false })).to.be.empty;
 
             process.argv = ['asdf', '--', '-', '--v'];
-            expect(filteredArgv({ keepLonelyDashes: true })).to.eql(['asdf', '--', '-']);
+            expect(filterArgv({ keepLonelyDashes: true })).to.eql(['asdf', '--', '-']);
 
             process.argv = Object.assign({}, oldProcArgs); // restore args
         });
 
         it('can optionally exclude assignment args e.g. --name=asdf <-default included', function () {
-            process.argv = ['--name=meeka', 'name=meeka'];
-            expect(filteredArgv({ assignments: 'all' })).to.eql(['--name=meeka', 'name=meeka']);
-            expect(filteredArgv({ assignments: 'noFlags' })).to.eql(['name=meeka']);
-            expect(filteredArgv({ assignments: 'none' })).to.be.empty;
+            process.argv = ['--name=meeka', 'name=meeka', 'aa'];
+            expect(filterArgv({ assignments: 'all' })).to.eql(['--name=meeka', 'name=meeka', 'aa']);
+            expect(filterArgv({ assignments: 'noFlags' })).to.eql(['name=meeka', 'aa']);
+            expect(filterArgv({ assignments: 'none' })).to.be.eql(['aa']);
             process.argv = Object.assign({}, oldProcArgs); // restore args
+        });
+
+        it('can optionally include flags', function () {
+            process.argv = ['--verbose'];
+            expect(filterArgv({ flags: true })).to.eql(process.argv);
+            expect(filterArgv({ flags: false })).to.eql([]);
         });
     });
 });
