@@ -1,7 +1,7 @@
 {
-  "name": "process-argv-minus-flags",
+  "name": "filter-argv",
   "version": "1.0.0",
-  "description": "Return process.argv with any flag arguments passed via the CLI excluded",
+  "description": "Mid-level process.argv filtering utils that make CLI arg extraction a breeze.",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha test/index.js",
@@ -11,13 +11,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andfaulkner/process-argv-minus-flags.git"
+    "url": "git+https://github.com/andfaulkner/filter-argv.git"
   },
   "keywords": [
     "process",
     "arguments",
     "cli",
     "terminal",
+    "parsing",
+    "filtering",
     "utility",
     "utilities",
     "command",
@@ -27,9 +29,9 @@
   "author": "Andrew Faulkner <andfaulkner@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/andfaulkner/process-argv-minus-flags/issues"
+    "url": "https://github.com/andfaulkner/filter-argv/issues"
   },
-  "homepage": "https://github.com/andfaulkner/process-argv-minus-flags#readme",
+  "homepage": "https://github.com/andfaulkner/filter-argv#readme",
   "dependencies": {
     "lodash.filter": "^4.6.0",
     "lodash.isarray": "^4.0.0",
