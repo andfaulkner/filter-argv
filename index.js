@@ -1,14 +1,18 @@
+/*********************************** IMPORT THIRD-PARTY MODULES ***********************************/
 const isArray = require('lodash.isarray');
 const isObject = require('lodash.isobject');
 const reject = require('lodash.reject');
 const isEqual = require('lodash.isequal');
 
+/***************************************** CONFIGURATION ******************************************/
 const defaultOpts = {
     // options: true | false
     keepLonelyDashes: false,
     // options: 'all' | 'none' | 'noflag'
     assignments: 'all',
+    // options: true | false
     flags: false,
+    // options: true | false
     standardArgs: true,
 };
 
@@ -37,6 +41,7 @@ const startsWithDash = (arg) => {
 const isStandaloneDashes = (arg) => {
     return !!arg.match(/^--?-?$/gim);
 }
+
 
 /******************** MODULE SCAFFOLDING HELPERS (ARGUMENTS, VALIDATION, ETC.) ********************/
 /**
@@ -91,6 +96,7 @@ function normalizeFilterArgvArguments(argvs, opts) {
     opts.assignments = cleanOpt(opts.assignments);
     return { cleanArgvs: argvs, cleanOpts: opts };
 }
+
 
 /************************************** PSEUDO-STATE MACHINE **************************************/
 /**
@@ -155,7 +161,13 @@ const filterArgv = (argvs = process.argv, opts = defaultOpts) => {
     return reject(cleanArgvs, (arg) => !resolveOptsToState(setState(arg), cleanOpts));
 }
 
+
 /************************************* CONVENIENCE FUNCTIONS **************************************/
+/**
+ * Return assignment-related arguments of all types (both flag and standard)
+ * @param  {Array<String>} argvs - cli args list {OPTIONAL; defaults to process.argv}
+ * @return {Array<String>} list of assignment args (args with =) from the CLI args list
+ */
 const getAssignmentArgsOnly = (argvs = process.argv) => {
     return filterArgv(argvs, {
         flags: false,
@@ -165,21 +177,35 @@ const getAssignmentArgsOnly = (argvs = process.argv) => {
     });
 };
 
+/**
+ * Return flag arguments from CLI args list
+ * @param  {Array<String>} argvs - cli args list {OPTIONAL; defaults to process.argv}
+ * @return {Array<String>} list of flags (--aasdf, -B style arguments) from the CLI args list
+ */
+const getStandardFlags = (argvs = process.argv) => {
+    return filterArgv(argvs, {
+        flags: true,
+        standardArgs: false,
+        assignments: 'none',
+        keepLonelyDashes: false
+    });
+}
 
 
 /********************************************* EXPORT *********************************************/
-
 module.exports = (process.env.__FILTER_ARGV_MOCHA_MODULE_TESTING__)
     ? {
         filterArgv,
         getAssignmentArgsOnly,
+        getStandardFlags,
         startDashesThenNonDashes,
         startsWithDash,
         isAssignmentFlagArg,
         isStandaloneDashes,
-        validateOpts
+        validateOpts,
     } 
     : {
         filterArgv,
-        getAssignmentArgsOnly
+        getAssignmentArgsOnly,
+        getStandardFlags,
       }
