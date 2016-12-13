@@ -92,38 +92,52 @@ function normalizeFilterArgvArguments(argvs, opts) {
     return { cleanArgvs: argvs, cleanOpts: opts };
 }
 
+/************************************** PSEUDO-STATE MACHINE **************************************/
+/**
+ * Determine the CLI arg type:
+ *     'lonely-dashes' | 'assignment-flag' | 'assignment-normal' | 'flag' | 'normal'
+ * @param  {String} arg - CLI argument
+ * @return {String{ENUM}} - CLI arg type. Acts as an enum.
+ */
 const setState = (arg) => {
-    console.log('arg:', arg);
-    if (isStandaloneDashes(arg)) return 'lonely-dashes';
-    if (isAssignmentFlagArg(arg)) return 'assignment-flag';
-    if (isAnyAssignmentArg(arg) && !isAssignmentFlagArg(arg)) return 'assignment-normal';
-    if (startDashesThenNonDashes(arg)) return 'flag';
-    if (!isStandaloneDashes(arg) && !isAssignmentFlagArg(arg) && !startDashesThenNonDashes(arg)) return 'normal';
+    if (isStandaloneDashes(arg)) {
+        return 'lonely-dashes';
+    }
+    if (isAssignmentFlagArg(arg)) {
+        return 'assignment-flag';
+    }
+    if (isAnyAssignmentArg(arg) && !isAssignmentFlagArg(arg)) {
+        return 'assignment-normal';
+    }
+    if (startDashesThenNonDashes(arg)) {
+        return 'flag';
+    }
+    if (!isStandaloneDashes(arg) && !isAssignmentFlagArg(arg) && !startDashesThenNonDashes(arg)) {
+        return 'normal';
+    }
+
     console.error(new TypeError(`unknown argument type passed on command line: ${arg}`));
     throw new TypeError(`unknown argument type passed on command line: ${arg}`);
 }
 
+/**
+ * Determine whether to keep the argument in the output by comparing the CLI arg
+ * type against the chosen options.
+ */
 const resolveOptsToState = (state, opts) => {
-    console.log('state:', state);
     switch(state) {
         case "lonely-dashes":
-            console.log('case lonely-dashes returning');
             return opts.keepLonelyDashes;
         case "assignment-flag":
-            console.log('case assignment-flag returning');
             return (opts.assignments !== 'none' && opts.assignments !== 'noflag');
         case "assignment-normal":
-            console.log('case assignment-normal returning');
             return (opts.assignments !== 'none');
         case "flag":
-            console.log('case flag returning');
             return opts.flags;
         case "normal":
-            console.log('case normal returning');
             return opts.standardArgs;
-      default:
-            console.log('case default returning');
-            return opts.standardArgs
+        default:
+            throw new TypeError('resolveOptsToState: Unknown CLI argument type, unknown state');
     }
 }
 
@@ -138,48 +152,34 @@ const resolveOptsToState = (state, opts) => {
  */
 const filterArgv = (argvs = process.argv, opts = defaultOpts) => {
     const { cleanArgvs, cleanOpts } = normalizeFilterArgvArguments(argvs, opts);
-
-    const output = reject(cleanArgvs, (arg) => {
-        const state = setState(arg);
-        console.log('\n\nstate:', state);
-        const optState = resolveOptsToState(state, cleanOpts);
-        console.log('optState:', optState);
-        console.log('cleanOpts:', cleanOpts);
-        return !optState;
-
-        if (cleanOpts.flags === true) {
-            if (startDashesThenNonDashes(arg)) return false;
-        }
-        if (cleanOpts.assignments === 'all' && isAnyAssignmentArg(arg)) return false;
-        if ((cleanOpt(cleanOpts.assignments) === 'noflag') && isAssignmentFlagArg(arg)) return true;
-        if ((cleanOpts.assignments === 'none') && isAnyAssignmentArg(arg)) return true;
-        if (isStandaloneDashes(arg)) return !cleanOpts.keepLonelyDashes;
-        
-        if (cleanOpts.flags) {
-            if (startDashesThenNonDashes(arg)) return false;
-        } else if (!cleanOpts.flags) {
-            if (startDashesThenNonDashes(arg)) return true
-        }
-    });
-    return output;
+    return reject(cleanArgvs, (arg) => !resolveOptsToState(setState(arg), cleanOpts));
 }
 
+/************************************* CONVENIENCE FUNCTIONS **************************************/
 const getAssignmentArgsOnly = (argvs = process.argv) => {
-    const output = reject(cleanArgvs, (arg) => {
-
+    return filterArgv(argvs, {
+        flags: false,
+        standardArgs: false,
+        assignments: 'all',
+        keepLonelyDashes: false
     });
+};
 
-}
+
 
 /********************************************* EXPORT *********************************************/
 
 module.exports = (process.env.__FILTER_ARGV_MOCHA_MODULE_TESTING__)
     ? {
         filterArgv,
+        getAssignmentArgsOnly,
         startDashesThenNonDashes,
         startsWithDash,
         isAssignmentFlagArg,
         isStandaloneDashes,
         validateOpts
     } 
-    : { filterArgv }
+    : {
+        filterArgv,
+        getAssignmentArgsOnly
+      }

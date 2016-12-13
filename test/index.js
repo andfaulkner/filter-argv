@@ -9,7 +9,7 @@ const mocha = require('mocha');
 const partial = require('lodash.partial');
 
 /*************************************** TESTED FILE IMPORT ***************************************/
-const { filterArgv, startDashesThenNonDashes, validateOpts,
+const { filterArgv, startDashesThenNonDashes, validateOpts, getAssignmentArgsOnly,
         startsWithDash, isAssignmentFlagArg, isStandaloneDashes } = require('../index');
 
 /********************************************* TESTS **********************************************/
@@ -150,6 +150,13 @@ describe('index.js', function() {
             process.argv = ['--verbose'];
             expect(filterArgv({ flags: true })).to.eql(process.argv);
             expect(filterArgv({ flags: false })).to.eql([]);
+        });
+    });
+
+    describe('getAssignmentArgsOnly', function() {
+        it('only returns assignment args', function () {
+            process.argv = ['--verbose', '--asdf=fghj', 'name=poo', 'brb'];
+            expect(getAssignmentArgsOnly()).to.eql(['--asdf=fghj', 'name=poo']);
         });
     });
 });
