@@ -145,10 +145,7 @@ describe('index.js', function() {
             expect(filteredArgv({ assignments: 'none' })).to.be.empty;
             process.argv = Object.assign({}, oldProcArgs); // restore args
         });
-
-
     });
-
 });
 
 // Restore original process.argv
