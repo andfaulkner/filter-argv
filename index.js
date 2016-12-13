@@ -72,7 +72,7 @@ function validateOpts(opts) {
     }
 }
 
-const isOptsInArgOneToFilterArgv = (argvs, opts) => {
+const isOptsInArgOneOfFilterArgv = (argvs, opts) => {
     return ((!isArray(argvs)) && (isObject(argvs)) && (isEqual(opts, defaultOpts)));
 }
 
@@ -88,9 +88,12 @@ const isOptsInArgOneToFilterArgv = (argvs, opts) => {
  */
 function normalizeFilterArgvArguments(argvs, opts) {
     // reassign accordingly if only options were passed in
-    if (isOptsInArgOneToFilterArgv(argvs, opts)) {
+    if (isOptsInArgOneOfFilterArgv(argvs, opts)) {
         opts = Object.assign({}, defaultOpts, argvs);
         argvs = process.argv;
+    }
+    if (isEqual(opts, defaultOpts)) {
+        opts = Object.assign({}, defaultOpts, opts);
     }
     validateOpts(opts);
     opts.assignments = cleanOpt(opts.assignments);

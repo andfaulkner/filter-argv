@@ -1,21 +1,71 @@
-# process-argv-minus-flags
-Return process.argv with any flag arguments passed via the CLI excluded.
+# filter-argv
+Utilities for filtering raw process.argv content (i.e. arguments passed via the CLI). Easily extract or exclude flag arguments (e.g. -v, --debug), assignment arguments (e.g. name=meeka, --age=14), standard args (e.g. create-component, load, repl), lonely dashes ('-', '--'), and any combination of argument types.
 
-Flag arguments are defined as any parameters beginning with - or --, followed by 1 or non-dash (or space) character.
-Also, any arguments containing an = that is both followed and preceded by one or more non-dash character is not considered a flag argument.
+##Quick examples
 
-##Type signature:  (processArg?: Array\<String\>) => Array\<String\>
+        input:
+            npm run my-script -- create-component HelloWorld --verbose --debug name=meeka --type=puppy
+
+        in my-script:
+
+            const { filterArgv } = require('filter-argv');
+
+            filterArgv();
+                // => ['my-script', 'create-component', 'HelloWorld', 'name=meeka', '--type=puppy']
+
+            filterArgv(process.argv);
+                // => ['my-script', 'create-component', 'HelloWorld', 'name=meeka', '--type=puppy']
+
+            filterArgv({ keepLonelyDashes: true });
+                // => ['my-script', '--', 'create-component', 'HelloWorld', 'name=meeka', '--type=puppy']
+
+            filterArgv({ keepLonelyDashes: true, assignments: 'none' });
+                // => ['my-script', '--', 'create-component', 'HelloWorld']
+
+            filterArgv({ assignments: 'noflag' });
+                // => ['my-script', 'create-component', 'HelloWorld', 'name=meeka']
+
+            filterArgv({ standardArgs: false, assignments: 'all' });
+                // => ['name=meeka', '--type=puppy']
+
+            filterArgv({ flags: true, standardArgs: false });
+                // => ['--verbose', '--debug', 'name=meeka', '--type=puppy']
+
+            filterArgv({ flags: true, standardArgs: false, assignments: 'noflag' });
+                // => ['--verbose', '--debug', 'name=meeka']
+
+            filterArgv({ flags: true, standardArgs: false, assignments: 'noflag', keepLonelyDashes: true });
+                // => ['--', --verbose', '--debug', 'name=meeka']
+
+
+##Type signatures
+
+### filterArgv: (processArg?: Array\<String\>, opts?: Options) => Array\<String\>
 
 *   processArg: optional parameter containing a string array, presumably process.argv or a modified form of it. However, any array of strings can be used - it is not limited to process.argv
-*   if no value is passed, defaults to the current value of process.argv
-*   returns a duplicate of the array with all flag arguments removed.
+    *   by default, returns a duplicate of the array with all flag arguments removed.
+    *   if no value is passed, defaults to the current value of process.argv
+    *   note: if you're parsing process.argv, for convenience you can simply pass in the Options object at this argument. The module will detect it, assign options correctly, & automatically parse the contents of process.argv.
 
-###Examples
+*   opts: (type Options): Provides options for filtering the process arguments.  By default, excludes flag CLI args (e.g. -a, --gbr) not used for assignment (e.g. --name=meeka, -type=puppy).
+    *   opts.flags: true | false                          Default: false
+        *   if true, keep flags in the returned process.argv object
+    *   opts.standardArgs: true | false                   Default: true
+        *   if true, keep standard (non-flag, non-assignment) arguments in the output (e.g. meeka, puppy)
+    *   opts.assignments: 'all' | 'none' | 'no-flags'     Default: all
+        *   'all': keep all assignment args (e.g. --name=meeka, age=43, --etc=ok)
+        *   'none': exclude all assignment args
+        *   'no-flags': exclude assignment args that are also flags (e.g. --name=meeka)
+    *   opts.keepLonelyDashes: true | false               Default: false
+        *   if true, keep isolated dashes ('-', '--', '---') in the output
+
+
+Examples
 
     //my-script.js
-    const processArgvMinusFlags = require('process-argv-minus-flags');
+    const { filterArgv } = require('filter-argv');
 
-    const contentArgsOnly = processArgvMinusFlags();
+    const contentArgsOnly = filterArgv();
     console.log(contentArgsOnly);
 
 The output of the above example will vary based on how the script was run (from the terminal). e.g.:
@@ -35,11 +85,31 @@ The output of the above example will vary based on how the script was run (from 
     input:   my-script.js --verbose create-component --name=SidebarGrid --debug
     output:  ["my-script.js", "create-component", "--name=SidebarGrid"]
 
+Other filterArgv examples :
 
-Other methods of calling processArgvMinusFlags function:
+    const contentArgsOnly = filterArgv(process.argv); // mainly for explicitness
+    const contentArgsOnly = filterArgv(['hello', '--flag', 'custom', 'array', 'example']); 
+    const contentArgsOnly = filterArgv({
+        assignments: 'noflag',
+        flags: true,
+        standardArgs: false,
+        keepLonelyDashes: true
+    }); 
 
-    const contentArgsOnly = processArgvMinusFlags(process.argv); // mainly for explicitness
-    const contentArgsOnly = processArgvMinusFlags(['hello', '--flag', 'custom', 'array', 'example']); 
+
+### getStandardFlags: (argv?: Array<String>) => Array<String>
+Convenience function to return a list of the flags in an arguments list. e.g.
+
+    getStandardFlags(['--verbose', 'reth', '--asdf=fghj', '--debug', 'boo']);
+        // => ['--verbose', '--debug']
+
+
+### getAssignmentArgsOnly: (argv?: Array<String>) => Array<String>
+Convenience function to return a list of the assignment args in an arguments list. e.g.
+
+    getAssignmentArgsOnly(['--verbose', 'reth', '--asdf=fghj', '--debug', 'boo', 'type=Bear']);
+        // => ['--asdf=fghj', 'type=Bear']
+
 
 
 ----
