@@ -6,9 +6,10 @@ process.env.__FILTER_ARGV_MOCHA_MODULE_TESTING__ = true;
 /************************************** THIRD-PARTY IMPORTS ***************************************/
 const { expect } = require('chai');
 const mocha = require('mocha');
+const partial = require('lodash.partial');
 
 /*************************************** TESTED FILE IMPORT ***************************************/
-const { filteredArgv, startDashesThenNonDashes,
+const { filteredArgv, startDashesThenNonDashes, validateOpts,
         startsWithDash, isAssignmentFlagArg, isStandaloneDashes } = require('../index');
 
 /********************************************* TESTS **********************************************/
@@ -16,6 +17,30 @@ describe('index.js', function() {
     it('index.js exists', function() {
       expect(filteredArgv).to.exist;
     });
+
+    describe('validateOpts', function() {
+        it('throws error if given options object with invalid value for assignments', function () {
+            expect(partial(validateOpts, {})).to.throw(TypeError);
+            expect(partial(validateOpts, { assignments: 'gr argh' })).to.throw(TypeError);
+        });
+        it('returns ok if given options object with valid value for assignments', function () {
+            expect(partial(validateOpts, { assignments: 'all' })).to.not.throw(TypeError);
+            expect(partial(validateOpts, { assignments: 'none' })).to.not.throw(TypeError);
+            
+            // the noflag option is set up to be forgiving. The right variant
+            // is hard to remember, so I allowed all of them.
+            expect(partial(validateOpts, { assignments: 'noflag' })).to.not.throw(TypeError);
+            expect(partial(validateOpts, { assignments: 'noflags' })).to.not.throw(TypeError);
+            expect(partial(validateOpts, { assignments: 'no-flag' })).to.not.throw(TypeError);
+            expect(partial(validateOpts, { assignments: 'no-flags' })).to.not.throw(TypeError);
+            expect(partial(validateOpts, { assignments: 'noFlag' })).to.not.throw(TypeError);
+            expect(partial(validateOpts, { assignments: 'noFlags' })).to.not.throw(TypeError);
+            expect(partial(validateOpts, { assignments: 'no-Flag' })).to.not.throw(TypeError);
+            expect(partial(validateOpts, { assignments: 'no-Flags' })).to.not.throw(TypeError);
+
+            expect(partial(validateOpts, { assignments: 'nFlgs' })).to.throw(TypeError);
+        });
+    })
 
     describe('startDashesThenNonDashes', function() {
         it('is true for string starting with -- or - followed by other chars', function () {
@@ -118,8 +143,6 @@ describe('index.js', function() {
             expect(filteredArgv({ assignments: 'all' })).to.eql(['--name=meeka', 'name=meeka']);
             expect(filteredArgv({ assignments: 'noFlags' })).to.eql(['name=meeka']);
             expect(filteredArgv({ assignments: 'none' })).to.be.empty;
-
-
             process.argv = Object.assign({}, oldProcArgs); // restore args
         });
 

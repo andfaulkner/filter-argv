@@ -24,10 +24,6 @@ const isAssignmentFlagArg = (arg) => {
     return !!arg.match(/^--?(([a-zA-Z0-9_]+.*)|("[a-zA-Z0-9_]+.*")|('[a-zA-Z0-9_]+.*'))=.+$/);
 }
 
-const notAssignmentFlagArg = (arg) => {
-    return !isAssignmentFlagArg(arg);
-}
-
 const startDashesThenNonDashes = (arg) => {
     return !!arg.match(/^--?[a-zA-Z0-9_]+/gim);
 }
@@ -124,6 +120,7 @@ module.exports = (process.env.__FILTER_ARGV_MOCHA_MODULE_TESTING__)
         startDashesThenNonDashes,
         startsWithDash,
         isAssignmentFlagArg,
-        isStandaloneDashes
+        isStandaloneDashes,
+        validateOpts
     } 
     : { filteredArgv }

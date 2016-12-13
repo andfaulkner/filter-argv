@@ -4,7 +4,10 @@
   "description": "Return process.argv with any flag arguments passed via the CLI excluded",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha test/index.js"
+    "test": "./node_modules/mocha/bin/mocha test/index.js",
+    "test:watch": "chokidar \"**/*.js\" --initial --verbose -c \"npm test\"",
+    "test:coverage": "istanbul cover _mocha",
+    "test:coverage:view": "open coverage/lcov-report/*.html"
   },
   "repository": {
     "type": "git",
@@ -36,6 +39,8 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "istanbul": "^0.4.5",
+    "lodash.partial": "^4.2.1",
     "mocha": "^3.2.0"
   }
 }
