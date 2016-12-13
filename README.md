@@ -4,7 +4,7 @@ Return process.argv with any flag arguments passed via the CLI excluded.
 Flag arguments are defined as any parameters beginning with - or --, followed by 1 or non-dash (or space) character.
 Also, any arguments containing an = that is both followed and preceded by one or more non-dash character is not considered a flag argument.
 
-##(processArg?: Array\<String\>) => Array\<String\>
+##Signature: (processArg?: Array\<String\>) => Array\<String\>
 *   processArg: optional parameter containing a string array, presumably process.argv or a modified form of it. However, any array of strings can be used - it is not limited to process.argv
 *   if no value is passed, defaults to the current value of process.argv
 *   returns a duplicate of the array with all flag arguments removed.
