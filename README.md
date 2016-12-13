@@ -34,7 +34,6 @@ The output of the above example will vary based on how the script was run (from 
 
     input:   my-script.js --verbose create-component --name=SidebarGrid --debug
     output:  ["my-script.js", "create-component", "--name=SidebarGrid"]
-             (recall that args containing an = sign preceded & followed by at least 1 non-dash char aren't excluded)
 
 
 Other methods of calling processArgvMinusFlags function:
