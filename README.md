@@ -47,16 +47,20 @@ Utilities for filtering raw process.argv content (i.e. arguments passed via the 
     *   if no value is passed, defaults to the current value of process.argv
     *   note: if you're parsing process.argv, for convenience you can simply pass in the Options object at this argument. The module will detect it, assign options correctly, & automatically parse the contents of process.argv.
 
-*   opts: (type Options): Provides options for filtering the process arguments.  By default, excludes flag CLI args (e.g. -a, --gbr) not used for assignment (e.g. --name=meeka, -type=puppy).
-    *   opts.flags: true | false                          Default: false
+*   opts: (type Options): Provides options for filtering the process arguments.  By default, excludes flag CLI args (e.g. -a, --gbr), excepting those used for assignment (e.g. it keeps args like --name=meeka, -type=puppy).
+    *   opts.flags: true | false
+        *   Default: false
         *   if true, keep flags in the returned process.argv object
-    *   opts.standardArgs: true | false                   Default: true
+    *   opts.standardArgs: true | false
+        *   Default: true
         *   if true, keep standard (non-flag, non-assignment) arguments in the output (e.g. meeka, puppy)
-    *   opts.assignments: 'all' | 'none' | 'no-flags'     Default: all
+    *   opts.assignments: 'all' | 'none' | 'no-flags
+        *   Default: all
         *   'all': keep all assignment args (e.g. --name=meeka, age=43, --etc=ok)
         *   'none': exclude all assignment args
         *   'no-flags': exclude assignment args that are also flags (e.g. --name=meeka)
-    *   opts.keepLonelyDashes: true | false               Default: false
+    *   opts.keepLonelyDashes: true | false
+        *   Default: false
         *   if true, keep isolated dashes ('-', '--', '---') in the output
 
 
@@ -109,9 +113,3 @@ Convenience function to return a list of the assignment args in an arguments lis
 
     getAssignmentArgsOnly(['--verbose', 'reth', '--asdf=fghj', '--debug', 'boo', 'type=Bear']);
         // => ['--asdf=fghj', 'type=Bear']
-
-
-
-----
-
-(A trivial utility for sure, but one I found myself creating again and again across projects)
