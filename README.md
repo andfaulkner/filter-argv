@@ -45,4 +45,4 @@ Other methods of calling processArgvMinusFlags function:
 
 ----
 
-A trivial little utility, but one I found myself creating again and again across projects.
+(A trivial utility for sure, but one I found myself creating again and again across projects)
