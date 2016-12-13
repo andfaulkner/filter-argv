@@ -24,7 +24,7 @@ Output values in example, based on how script was run from the terminal:
     //          --> output --> ["node", "my-script.js"]
     //    input:  my-script.js --verbose create-component SidebarGrid
     //          --> output --> ["my-script.js", "create-component", "SidebarGrid"]
-    //    myinput:  -script.js --verbose create-component SidebarGrid --debug
+    //    input:  my-script.js --verbose create-component SidebarGrid --debug
     //          --> output --> ["my-script.js", "create-component", "SidebarGrid"]
     //    input:  my-script.js --verbose create-component --name=SidebarGrid --debug
     //          --> output --> ["my-script.js", "create-component", "--name=SidebarGrid"]
