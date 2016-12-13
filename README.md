@@ -8,8 +8,7 @@ Also, any arguments containing an = that is both followed and preceded by one or
 *   processArg: optional parameter containing a string array, presumably process.argv or a modified form of it. However, any array of strings can be used - it is not limited to process.argv
 *   if no value is passed, defaults to the current value of process.argv
 *   returns a duplicate of the array with all flag arguments removed.
-*   Examples:
-
+*   Example:
 
         //my-script.js
         const processArgvMinusFlags = require('process-argv-minus-flags');
