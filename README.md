@@ -15,18 +15,18 @@ Also, any arguments containing an = that is both followed and preceded by one or
     const processArgvMinusFlags = require('process-argv-minus-flags');
 
     const contentArgsOnly = processArgvMinusFlags();
+    console.log(contentArgsOnly);
 
-    console.log(contentArgsOnly)
-    // if the script was run with:
-    //    node my-script.js --verbose
+Output values in example, based on how script was run from the terminal:
+    //    input:  node my-script.js --verbose
     //          --> output --> ["node", "my-script.js"]
-    //    node my-script.js
+    //    input:  node my-script.js
     //          --> output --> ["node", "my-script.js"]
-    //    my-script.js --verbose create-component SidebarGrid
+    //    input:  my-script.js --verbose create-component SidebarGrid
     //          --> output --> ["my-script.js", "create-component", "SidebarGrid"]
-    //    my-script.js --verbose create-component SidebarGrid --debug
+    //    myinput:  -script.js --verbose create-component SidebarGrid --debug
     //          --> output --> ["my-script.js", "create-component", "SidebarGrid"]
-    //    my-script.js --verbose create-component --name=SidebarGrid --debug
+    //    input:  my-script.js --verbose create-component --name=SidebarGrid --debug
     //          --> output --> ["my-script.js", "create-component", "--name=SidebarGrid"]
     //          - the module doesn't exclude arguments containing an = sign
 
